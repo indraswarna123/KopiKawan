@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+
+</head>
+<body>
+
+<h1>Transaction</h1>
+
+<table id="tableUser" class="table table-bordered">
+    <thead>
+    <tr>
+        <th>TransactionID</th>
+        <th>ProductID</th>
+        <th>Date</th>
+    </tr>
+    </thead>
+
+</table>
+
+<button class="btn btn-dark float-right col-xl" data-toggle="modal" id="insertButton" data-target="#exampleModal">Insert Transaction</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Insert Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">TransactionId</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Input your ID" id="TransactionId">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >ProductId</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Input your Name" id="ProductId">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >Date</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="M or F" id="date">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="dismissBtn" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="insertBtn" onclick="insertUser()">Insert</button>
+                <button type="button" class="btn btn-primary" id="updateBtn" onclick="postUpdateUser()">Update</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    document.getElementById("insertBtn").style.display = "none";
+    $('#insertButton').click(function(){
+        document.getElementById("insertBtn").style.display = "block";
+        document.getElementById("updateBtn").style.display = "none";
+    });
+    $('#dismissBtn').click(function () {
+        document.getElementById("id").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("gender").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("address").value = "";
+        document.getElementById("status").value = "";
+    });
+
+    function insertUser(){
+        var id = document.getElementById("TransactionId").value;
+        // var productId = document.getElementById("ProductId").value;
+        var productId = '2355';
+        var obj = jQuery.parseJSON(productId);
+        console.log(obj);
+        var date = document.getElementById("date").value;
+        
+
+        $.post("http://localhost:5000/insertTransaction",{id: obj}, function(res){
+            if(res == "done"){
+                alert("Successfully inserted")
+                document.getElementById("dismissBtn").click();
+                location.reload();
+            }else{
+                alert("Failed to insert");
+            }
+        });
+    }
+
+    function updateUser(id2,name2,gender2,email2,address2,status2){
+        document.getElementById("insertBtn").style.display = "none";
+        document.getElementById("updateBtn").style.display = "block";
+        $("#exampleModal").modal();
+
+        document.getElementById("id").value = id2;
+        document.getElementById("name").value = name2;
+        document.getElementById("gender").value = gender2;
+        document.getElementById("email").value = email2;
+        document.getElementById("address").value = address2;
+        document.getElementById("status").value = status2;
+
+    }
+
+    function postUpdateUser(){
+        var id = document.getElementById("id").value;
+        console.log(id);
+        var name = document.getElementById("name").value;
+        var gender = document.getElementById("gender").value;
+        var email = document.getElementById("email").value;
+        var address = document.getElementById("address").value;
+        var status = document.getElementById("status").value;
+
+        $.post("http://localhost:5000/updateUser",{id: id,name: name,gender: gender,email: email,address: address,status:status}, function(res){
+            if(res = "done"){
+                alert("Successfully Update");
+                location.reload();
+            }else{
+                alert("Failed to Update");
+
+            }
+        });
+    }
+
+    function deleteUser(id){
+        $.post("http://localhost:5000/deleteUser",{id: id}, function(res){
+            if(res=="done"){
+                alert("deleted");
+                location.reload();
+            }else{
+                console.log("false");
+            }
+        });
+    }
+
+    var table = document.getElementById("tableUser");
+    $.ajax({
+        url: "http://localhost:5000/showTransaction",
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+            console.log(res);
+            for(var i =0;i < res.length;i++)
+            {
+
+                    var td=document.createElement('td');
+                    td.innerHTML=res[i].id;
+                    var td2=document.createElement('td');
+                    td2.innerHTML=res[i].product_id;
+                    var td3=document.createElement('td');
+                    td3.innerHTML=res[i].date;
+                    
+                    var tr=document.createElement('tr');
+                    tr.appendChild(td);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    
+                    table.append(tr);
+
+
+            }
+        }
+    });
+</script>
+</html>

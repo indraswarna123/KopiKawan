@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+
+<h1>Table User</h1>
+
+<!-- <div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <select class="input-group-text" id="selectSearch">
+            <option >ID</option>
+            <option >Name</option>
+            <option >Price</option>
+        </select>
+    </div>
+    <input type="text" class="form-control" placeholder="Input your choice search" id="search">
+
+    <button type="button" class="btn btn-primary" onclick="searchUser()">Search by ID</button>
+
+</div> -->
+
+
+<table id="tableUser" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+
+</table>
+
+</body>
+<script>
+
+    // function searchUser(){
+    //     var id = document.getElementById("search").value;
+    //     var searchType = document.getElementById("selectSearch");
+    //     var type = searchType.options[searchType.selectedIndex].value;
+    //     console.log(type);
+    //     $.post("http://localhost:5000/searchUser",{id: id,type: type}, function(res){
+    //         console.log(res);
+
+    //         if(res.length != 0){
+    //             var tb = document.getElementById('tableUser');
+    //             while(tb.rows.length > 1) {
+    //                 tb.deleteRow(1);
+    //             }
+
+    //             for(var i =0;i < res.length;i++)
+    //             {
+    //                 if(res[i].status == 1) {
+    //                     var td=document.createElement('td');
+    //                     td.innerHTML=res[i].id;
+    //                     var td2=document.createElement('td');
+    //                     td2.innerHTML=res[i].name;
+    //                     var td3=document.createElement('td');
+    //                     td3.innerHTML=res[i].price;
+
+    //                     var tr=document.createElement('tr');
+    //                     tr.appendChild(td);
+    //                     tr.appendChild(td2);
+    //                     tr.appendChild(td3);
+    //                     table.append(tr);
+    //                 }else{
+
+    //                 }
+    //             }
+    //         }else{
+    //             alert("Data not found !!");
+    //         }
+    //     });
+    // }
+
+    // function
+
+    var table = document.getElementById("tableUser");
+    $.ajax({
+        url: "http://localhost:5000/showUser",
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+            console.log(res);
+            for(var i =0;i < res.length;i++)
+            {
+                var td=document.createElement('td');
+                td.innerHTML=res[i].id;
+                var td2=document.createElement('td');
+                td2.innerHTML=res[i].name;
+                var td3=document.createElement('td');
+                td3.innerHTML=res[i].price;
+
+                var tr=document.createElement('tr');
+                tr.appendChild(td);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                table.append(tr);
+
+            }
+        }
+    });
+</script>
+</html>
